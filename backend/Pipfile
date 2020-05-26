@@ -13,6 +13,7 @@ flask-sqlalchemy = "*"
 flask-restful = "*"
 mysqlclient = "*"
 marshmallow = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.7"
