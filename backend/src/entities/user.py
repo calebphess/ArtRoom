@@ -2,6 +2,7 @@
 
 from sqlalchemy import Column, String
 from .entity import Entity, Base
+from marshmallow import Schema, fields
 
 class User(Entity, Base):
   __tablename__ = 'users'
@@ -15,3 +16,13 @@ class User(Entity, Base):
     self.first_name = first_name
     self.last_name = last_name
     self.username = username
+
+class UserSchema(Schema):
+  id = fields.Number()
+  first_name = fields.Str()
+  last_name = fields.Str()
+  username = fields.Str()
+  created_at = fields.DateTime()
+  updated_at = fields.DateTime()
+  last_updated_by = fields.Int()
+  created_by = fields.Int()
