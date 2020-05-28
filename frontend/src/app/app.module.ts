@@ -4,6 +4,7 @@ import {HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {UsersApiService} from './users/users-api.service'
+import {ProductsApiService} from './products/products-api.service'
 
 @NgModule({
   declarations: [
@@ -13,7 +14,7 @@ import {UsersApiService} from './users/users-api.service'
     BrowserModule,
     HttpClientModule
   ],
-  providers: [UsersApiService],
+  providers: [UsersApiService, ProductsApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -15,8 +15,8 @@ export class ProductsApiService {
     return Observable.throw(err.message || 'Error: Unable to complete product request.');
   }
 
-  // GET list of users
-  getUsers(): Observable<Product[]>{
+  // GET list of products
+  getProducts(): Observable<Product[]>{
     return this.http.get<Product[]>(`${API_URL}/products`).catch(ProductsApiService._handleError)
   }
 }
