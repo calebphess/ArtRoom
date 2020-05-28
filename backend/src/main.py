@@ -95,6 +95,7 @@ if len(users) == 0:
   dummy_user = User("Caleb", "Penn", "cpenn", 0)
   session.add(dummy_user)
   session.commit()
+  session.close()
 
   # reload users
   users = session.query(User).all()
@@ -107,6 +108,7 @@ if len(products) == 0:
   dummy_product = Product("Starry Night", "A graphic of a stary night", "path/to/img", 11.99, 0)
   session.add(dummy_product)
   session.commit()
+  session.close()
 
   # reload products
   products = session.query(Product).all()
