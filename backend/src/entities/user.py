@@ -1,8 +1,8 @@
 # coding=utf-8
 
 from sqlalchemy import Column, String
-from .entity import Entity, Base
 from marshmallow import Schema, fields
+from .entity import Entity, Base
 
 class User(Entity, Base):
   __tablename__ = 'users'
