@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 
 from .entities.entity import Session, engine, Base
 from .entities.user import User, UserSchema
+from .entities.product import Product, ProductSchema
 
 # creating the flask application
 app = Flask(__name__)
@@ -32,10 +33,10 @@ def get_users():
   return jsonify(users)
 
 @app.route('/users', methods=['POST'])
-def add_exam():
+def add_user():
   # mount the user object
   posted_user = UserSchema(only=('first_name', 'last_name', 'username')).load(request.get_json())
-  user = User(**posted_user, creator=1)
+  user = User(**posted_user, creator=0)
 
   # persist the user
   session = Session()
@@ -47,10 +48,46 @@ def add_exam():
   session.close()
   return jsonify(new_user), 201
 
-# start session
-session = Session();
+# class for the /products endpoint
+@app.route('/products')
+def get_products():
+  # start the database connection session
+  session = Session()
 
-# check for existing data
+  # fetching all products from the database
+  product_objects = session.query(Product).all()
+
+  # transform the data to objects that can be serialized to JSON
+  schema = ProductSchema(many=True)
+  products = schema.dump(product_objects)
+
+  # close the session before we return
+  session.close()
+
+  # serialize as JSON and return
+  return jsonify(products)
+
+  
+@app.route('/products', methods=['POST'])
+def add_product():
+  # mount the product object
+  posted_product = ProductSchema(only=('name', 'description', 'image_url', 'price')).load(request.get_json())
+  product = Product(**posted_product, creator=0)
+
+  # persist the product
+  session = Session()
+  session.add(product)
+  session.commit()
+
+  # return the created product
+  new_product = ProductSchema().dump(product)
+  session.close()
+  return jsonify(new_product), 201
+
+# start session
+session = Session()
+
+# check for existing user data
 users = session.query(User).all()
 
 if len(users) == 0:
@@ -58,12 +95,33 @@ if len(users) == 0:
   dummy_user = User("Caleb", "Penn", "cpenn", 0)
   session.add(dummy_user)
   session.commit()
-  session.close()
 
   # reload users
   users = session.query(User).all()
+
+# check for existing product data
+products = session.query(Product).all()
+
+if len(products) == 0:
+  # create and persist dummy product
+  dummy_product = Product("Starry Night", "A graphic of a stary night", "path/to/img", 11.99, 0)
+  session.add(dummy_product)
+  session.commit()
+
+  # reload products
+  products = session.query(Product).all()
+
+session.close()
 
 # show existing users
 print('### Users:')
 for user in users:
   print(f'({user.id}) {user.first_name} {user.last_name} - {user.username}')
+
+# new line
+print()
+
+# show existing users
+print('### Products:')
+for product in products:
+  print(f'({product.id}) {product.name} - {product.description} - {product.price} - {product.image_url}')
