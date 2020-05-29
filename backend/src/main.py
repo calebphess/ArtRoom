@@ -5,6 +5,7 @@ from flask import Flask, jsonify, request
 from .entities.entity import Session, engine, Base
 from .entities.user import User, UserSchema
 from .entities.product import Product, ProductSchema
+from .auth import AuthError, requires_auth
 
 # creating the flask application
 app = Flask(__name__)
@@ -69,6 +70,7 @@ def get_products():
 
   
 @app.route('/products', methods=['POST'])
+@requires_auth
 def add_product():
   # mount the product object
   posted_product = ProductSchema(only=('name', 'description', 'image_url', 'price')).load(request.get_json())
@@ -83,6 +85,12 @@ def add_product():
   new_product = ProductSchema().dump(product)
   session.close()
   return jsonify(new_product), 201
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
 # start session
 session = Session()
