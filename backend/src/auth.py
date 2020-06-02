@@ -4,7 +4,7 @@ from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 
-AUTH0_DOMAIN = 'https://dev-l38za-p9.auth0.com/'
+AUTH0_DOMAIN = 'https://dev-l38za-p9.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'https://ArtRoom.api'
 
